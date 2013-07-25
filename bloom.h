@@ -13,11 +13,8 @@
 #ifndef _BLOOM_H
 #define _BLOOM_H 1
 
-#define BLOOM_VERSION 1
-
 typedef struct bloom_s
 {
-  int version;
   int bits;
   int hashes;
   unsigned char data[];

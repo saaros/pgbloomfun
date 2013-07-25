@@ -18,7 +18,6 @@
 int bloom_init(bloom_t *bloom, int entries, double error)
 {
   double bpe = -(log(error) / 0.480453013918201);  /* ln(2)^2 */
-  bloom->version = BLOOM_VERSION;
   bloom->bits = ((int)(((double) entries) * bpe)) / 8 * 8;
   bloom->hashes = (int)ceil(0.693147180559945 * bpe);  /* ln(2) */
   return 0;

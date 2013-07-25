@@ -1,16 +1,18 @@
 pgbloomfun
 ==========
 
-pgbloomfun is an implementation of bloom filter functions for PostgreSQL.
-This extension only provides a couple of simple functions for using bloom
-filters on bytea variables and does not include indexing or other features
-provided by Teodor's and Oleg's bloom index
-(http://www.sai.msu.su/~megera/wiki/bloom)
+pgbloomfun is an implementation of scalable bloom filter functions for
+PostgreSQL.  The implementation automatically scales the filter as more data
+is added to it.
+
+This extension only provides functions for using bloom filters on bytea
+variables and does not include indexing or other features provided by
+Teodor's and Oleg's bloom index (http://www.sai.msu.su/~megera/wiki/bloom)
 
 Example usage:
 
   CREATE TABLE bloomtest (hits INT, bloom BYTEA);
-  INSERT INTO bloomtest VALUES (0, bloom_init(1000, 0.01));
+  INSERT INTO bloomtest VALUES (0, bloom_init(500, 3, 0.01));
   DO $$
     DECLARE ctr INT;
     BEGIN
@@ -22,11 +24,12 @@ Example usage:
       END LOOP;
     END;
   $$;
-  SELECT hits FROM bloomtest;
+  SELECT hits, bloom_stats(bloom) FROM bloomtest;
 
-Bloom filter implementation is based on Jyri J. Virkki's libbloom
-(https://github.com/jvirkki/libbloom) and the MurmurHash3 is from SMHasher
-by Austin Appleby (https://code.google.com/p/smhasher/).
+Basic bloom filter implementation is based on Jyri J. Virkki's libbloom
+(https://github.com/jvirkki/libbloom) and the MurmurHash3 hash function used
+to distribute data in the bloom filter is from Austin Appleby's SMHasher
+(https://code.google.com/p/smhasher/).
 
 license
 =======
