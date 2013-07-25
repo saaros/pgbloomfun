@@ -1,0 +1,26 @@
+## debian/packages for pgbloomfun 0.1
+Source: pgbloomfun
+Section: contrib/misc
+Priority: extra
+Maintainer: Oskari Saarenmaa <os@ohmu.fi>
+Standards-Version: 3.6.2
+Description: bloom filter functions for PostgreSQL
+Copyright: .
+ Copyright 2013 Oskari Saarenmaa
+Build: sh
+ make PG_CONFIG=/usr/lib/postgresql/PGVER/bin/pg_config
+Clean: sh
+ make clean PG_CONFIG=/usr/lib/postgresql/PGVER/bin/pg_config || true
+Build-Depends: postgresql-server-dev-PGVER, yada, libpq-dev, devscripts
+
+
+Package: postgresql-pgbloomfun-PGVER
+Architecture: any
+Conflicts: pgbloomfun
+Replaces: pgbloomfun
+Contains: unstripped
+Depends: []
+Description: bloom filter functions for PostgreSQL
+ .
+Install: sh
+ make install PG_CONFIG=/usr/lib/postgresql/PGVER/bin/pg_config DESTDIR=$ROOT

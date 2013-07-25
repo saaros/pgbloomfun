@@ -1,0 +1,42 @@
+pgbloomfun
+==========
+
+pgbloomfun is an implementation of bloom filter functions for PostgreSQL.
+This extension only provides a couple of simple functions for using bloom
+filters on bytea variables and does not include indexing or other features
+provided by Teodor's and Oleg's bloom index
+(http://www.sai.msu.su/~megera/wiki/bloom)
+
+Example usage:
+
+  CREATE TABLE bloomtest (hits INT, bloom BYTEA);
+  INSERT INTO bloomtest VALUES (0, bloom_init(1000, 0.01));
+  DO $$
+    DECLARE ctr INT;
+    BEGIN
+      FOR ctr IN 1..1000 LOOP
+        UPDATE bloomtest
+        SET hits = hits + 1,
+            bloom = bloom_add(bloom, ctr::text)
+        WHERE bloom_check(bloom, ctr::text) IS FALSE;
+      END LOOP;
+    END;
+  $$;
+  SELECT hits FROM bloomtest;
+
+Bloom filter implementation is based on Jyri J. Virkki's libbloom
+(https://github.com/jvirkki/libbloom) and the MurmurHash3 is from SMHasher
+by Austin Appleby (https://code.google.com/p/smhasher/).
+
+license
+=======
+
+pgbloomfun is released under a 2-clause BSD license.  For the exact license
+terms, see `LICENSE` and http://opensource.org/licenses/BSD-2-Claused .
+
+contact
+=======
+
+pgbloomfun is maintained by Oskari Saarenmaa <os@ohmu.fi>, bug reports and
+patches are very welcome, please post them as GitHub issues and pull
+requests at https://github.com/saaros/pgbloomfun

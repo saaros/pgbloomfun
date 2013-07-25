@@ -1,0 +1,5 @@
+# pgbloomfun extension
+comment = 'bloom filter functions'
+default_version = '__short_ver__'
+module_pathname = '$libdir/pgbloomfun'
+relocatable = true
