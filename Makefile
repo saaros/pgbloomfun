@@ -46,3 +46,10 @@ deb%:
 	sed -e s/PGVER/$(subst deb,,$@)/g < debian/packages.in > debian/packages
 	yada rebuild
 	debuild -uc -us -b
+
+rpm:
+	git archive --output=pgbloomfun-rpm-src.tar.gz --prefix=pgbloomfun/ HEAD
+	rpmbuild -ta pgbloomfun-rpm-src.tar.gz \
+		--define 'major_version $(short_ver)' \
+		--define 'minor_version $(subst -,.,$(subst $(short_ver)-,,$(long_ver)))'
+	$(RM) pgbloomfun-rpm-src.tar.gz
